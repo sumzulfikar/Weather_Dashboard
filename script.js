@@ -15,9 +15,51 @@ return response.json();
 })
 .then(function(data){
 
-
-    
     console.log(data);
+    var cloud=$("<i>");
+    cloud.attr("class","fa-solid fa-cloud");
+    
+    var h1=$("<h1>");
+    h1.text(`${cityname} (${currentdate})`);
+    
+    
+        console.log(data);
+    var locationHeader=$("#today").append(h1.append(cloud));
+    
+    //Temp Wind and humidity display
+    var div=$("<div>");
+    var ul=$("<ul>");
+    div.attr("class","relevantDetails");
+    var currentTemp=data.list[0].main.temp;
+    currentTemp=(currentTemp-273.15).toFixed(2);
+    //Tempreture in celcius
+    var liTemp=$("<li>");
+    liTemp=liTemp.text(`Temp: ${currentTemp} ℃`);
+    ul=ul.append(liTemp);
+    div=div.append(ul);
+       locationHeader.append(div);
+    //Wind in kph
+    var currentWind=data.list[0].wind.speed;
+    currentWind=(currentWind*3.6).toFixed(2);
+    var liWeather=$("<li>");
+    liWeather=liWeather.text(`Wind: ${currentWind} KPH`);
+    ul=ul.append(liWeather);
+    div=div.append(ul);
+       locationHeader.append(div);
+    
+       //Humidity %
+    var currentWind=data.list[0].wind.speed;
+    currentWind=(currentWind*3.6).toFixed(2);
+    var liWeather=$("<li>");
+    liWeather=liWeather.text(`Wind: ${currentWind} KPH`);
+    ul=ul.append(liWeather);
+    div=div.append(ul);
+       locationHeader.append(div);
+    
+    });
+    
+    
+    
 });
 
 
