@@ -6,11 +6,6 @@ var cityname=$("#search-input").val().trim();
 console.log(cityname);
 
 var queryURL= "https://api.openweathermap.org/data/2.5/forecast?q="+ cityname + "&appid=" + APIKey;
-//Date format expected 14/9/2022
-var currentdate=dayjs().format("DD/M/YYYY");
-console.log(currentdate);
-
-$("#today").append($("<h1>").text(cityname+" ("+currentdate + " )"));
 
 
 fetch(queryURL)
