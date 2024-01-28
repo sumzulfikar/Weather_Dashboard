@@ -72,16 +72,27 @@ return response.json();
        locationHeader.append(div);
     
     //    Displaying 5 day weather for the location selected by the traveller
-    var weather=document.querySelector(".weather")
+    
     for(var i=0;i<=5; i++){
-        var div=$("<div>").attr("class","card");
-        var weekday=$("<h5>");
-        weekday.text(data.list[i].dt_txt);
-        var liTemp=$("<li>");
-        var liWind=$("<li>");
-        var liHumidity=$("<li>");
-       //weather.append(liTemp).append(liWind).append(liHumidity);
-    }
+        //The api is sending 8 responses per day every 3 hour interval, below is ensuring those readings are skipped every 8 records.
+        var weatherData=data.list[i*8];
+        var futureTemp= weatherData.main.temp;
+        futureTemp=(futureTemp-273.15).toFixed(2);
+        var futureWind=weatherData.wind.speed;
+        futureWind=(futureWind*3.6).toFixed(2);
+        var futureHumidity=weatherData.main.humidity;
+        var dateTime=weatherData.dt_txt.split(' ');
+        
+        //Creating card with weather details for each day
+        var cardDiv=$("<div>").addClass("card");
+        var dateTimeElement=$("<h5>").text(dateTime[0]);
+        var tempElement=$("<p>").text(`Temp: ${futureTemp} ℃`);
+        var windElement=$("<p>").text(`Wind: ${futureWind} KPH`);
+        var humidityElement=$("<p>").text(`Humidity: ${futureHumidity} %`);
+        cardDiv.append(dateTimeElement,tempElement,humidityElement,windElement);
+
+        $("#weather").append(cardDiv);
+    } 
 
 
 
