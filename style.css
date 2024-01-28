@@ -42,4 +42,6 @@ footer {
     border: solid;
     background-color:#2D3E50 ;
     color: #FFFF;
+    width: 15%;
+    text-align: center;
 }
