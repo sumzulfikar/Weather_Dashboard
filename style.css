@@ -25,16 +25,11 @@ width:33%}
 }
 footer {
     clear: both;
-    margin-bottom: 0;
-  }
-/* .weather-search{
-    width: 150px;
-} */
-/* .container-fluid{
-    display: flex;
-    flex-direction: column;
+    margin-top: 400px;
     
-} */
+
+  }
+
 .card{
     display: inline-block;
     flex-direction: row;
