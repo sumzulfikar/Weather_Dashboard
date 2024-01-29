@@ -3,14 +3,19 @@ $("#search-button").on("click",function(event){
     event.preventDefault();
 var APIKey= "166a433c57516f51dfab1f7edaed8413";
 var cityname=$("#search-input").val().trim();
+//calling the create city button function
+
+
 
 //Creating a button everytime user searches city name
+
 var historySearch=document.querySelector("#history");
 var searchBtn=document.createElement("button");
 searchBtn.setAttribute("id","inputtext");
 searchBtn.setAttribute("class","btn btn-secondary");
 searchBtn.textContent=cityname;
 historySearch.appendChild(searchBtn);
+
 
 //Saving city name in local storage
 var cityValue=localStorage.getItem("cities")
@@ -122,16 +127,20 @@ iconTag.attr("src",iconurl);
 
 //Clearing the screen when buttons from search history are clicked
 
-// $(document).on("clicked","#inputtext",displayHistoricalCities);
+ $(document).on("click","#inputtext",displayHistoricalCities);
 
-// function displayHistoricalCities(){
-// $("#weather").empty();
+function displayHistoricalCities(event){
+    event.preventDefault();
+$("#weather").empty();
+$("#current-weather").empty();
+
+}
 
 
 
 
 
-// }
+
 
 
 
