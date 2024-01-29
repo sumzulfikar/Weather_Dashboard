@@ -1,41 +1,41 @@
-
+//Traveler enters city name and clicks search button
 $("#search-button").on("click",function(event){
     event.preventDefault();
-var APIKey= "166a433c57516f51dfab1f7edaed8413";
-var cityname=$("#search-input").val().trim();
-//calling the create city button function
+    $("#weather").empty();
+    $("#current-weather").empty();
+    var cityname=$("#search-input").val().trim().toUpperCase();;
+    //Calling create city buttons function so that traveler can reuse those
+    createCityButton(cityname);
 
-
-
-//Creating a button everytime user searches city name
-
-var historySearch=document.querySelector("#history");
-var searchBtn=document.createElement("button");
-searchBtn.setAttribute("id","inputtext");
-searchBtn.setAttribute("class","btn btn-secondary");
-searchBtn.textContent=cityname;
-historySearch.appendChild(searchBtn);
-
-
-//Saving city name in local storage
+    //Saving city name in local storage
 var cityValue=localStorage.getItem("cities")
 var savedCities=JSON.parse(cityValue);
+
 if (savedCities === null) {
     savedCities = [];
   }
+
 savedCities.push(cityname);
 
 localStorage.setItem("cities",JSON.stringify(savedCities));
 
+// Calling the weather api to return results
+weatherAPICall(cityname);
 
-var queryURL= "https://api.openweathermap.org/data/2.5/forecast?q="+ cityname + "&appid=" + APIKey;
-//Date format expected 14/9/2022 "&cnt=15"+
-var currentdate=dayjs().format("DD/M/YYYY");
+});
 
+function weatherAPICall(cityname){
+   
+    var APIKey= "166a433c57516f51dfab1f7edaed8413";
+    var queryURL= "https://api.openweathermap.org/data/2.5/forecast?q="+ cityname + "&appid=" + APIKey;
+
+ //Date format expected Year, Month and day
+
+var currentdate=dayjs().format("YYYY-MM-DD");
 
 var h1=$("<h1>");
 h1.text(`${cityname} (${currentdate})`);
-var locationHeader=$("#today").append(h1);
+$("#current-weather").append(h1);
 
 
 fetch(queryURL)
@@ -44,12 +44,22 @@ return response.json();
 
 })
 .then(function(data){
+    //Passing the data response received from the API and calling get weatherdetails function
+    getWeatherDetails(data);
+
+});
+}
+
+
+function getWeatherDetails(data){
+    $("#fivedayTitle").attr("style", "display: block");
 
 // Displaying correct icon from API
 var iconTag=$("<img>");
 var iconImg= data.list[1].weather[0].icon;
 var iconurl="https://openweathermap.org/img/wn/"+iconImg+".png";
 iconTag.attr("src",iconurl);
+var locationHeader=$("#current-weather");
 
     //Temp Wind and humidity display
     var div=$("<div>");
@@ -64,16 +74,15 @@ iconTag.attr("src",iconurl);
     liTemp.append(iconTag);
     ul.append(liTemp);
     div.append(ul);
-       locationHeader.append(div);
+    locationHeader.append(div);
     //Wind in kph
     var currentWind=currentdata.wind.speed;
-    console.log(currentdata.dt_txt);
     currentWind=(currentWind*3.6).toFixed(2);
     var liWind=$("<li>");
    liWind.text(`Wind: ${currentWind} KPH`);
    ul.append(liWind);
     div.append(ul);
-       locationHeader.append(div);
+    locationHeader.append(div);
     
        //Humidity %
     var currentHumidity=currentdata.main.humidity;
@@ -82,10 +91,12 @@ iconTag.attr("src",iconurl);
     liHumidity.text(`Humidity: ${currentHumidity} %`);
     ul.append(liHumidity);
     div.append(ul);
-       locationHeader.append(div);
+    locationHeader.append(div);
+   
     
     //    Displaying 5 day weather for the location selected by the traveller
-    
+    $("#weather").empty();
+   
     for(var i=0;i<=5; i++){
         //The api is sending 8 responses per day every 3 hour interval, below is ensuring those readings are skipped every 8 records.
         var weatherData=data.list[i*8];
@@ -118,32 +129,34 @@ iconTag.attr("src",iconurl);
         $("#weather").append(cardDiv);
     } 
     }
+}
 
-    });
-    
-    
-}); 
+//Creating a button everytime user searches city name
+function createCityButton(cityname){
+    var historySearch=document.querySelector("#history");
+    var searchBtn=document.createElement("button");
+    searchBtn.setAttribute("id","inputtext");
+    searchBtn.setAttribute("class","btn btn-secondary");
+    searchBtn.textContent=cityname;
+    historySearch.appendChild(searchBtn);
 
-
-//Clearing the screen when buttons from search history are clicked
-
- $(document).on("click","#inputtext",displayHistoricalCities);
-
-function displayHistoricalCities(event){
-    event.preventDefault();
-$("#weather").empty();
-$("#current-weather").empty();
 
 }
 
+//Clearing the screen when buttons from search history are clicked and calling the weather api to return weather details
+
+$(document).on("click","#inputtext",function(event){
+    event.preventDefault();
+    $("#current-weather").empty();
+    $("#weather").empty();
+   
+    var cityname=$(event.target).text();
+   
+    weatherAPICall(cityname);
+    
+    });
 
 
-
-
-
-
-
-
-
+   
 
 
