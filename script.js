@@ -3,6 +3,7 @@ $("#search-button").on("click",function(event){
     event.preventDefault();
 var APIKey= "166a433c57516f51dfab1f7edaed8413";
 var cityname=$("#search-input").val().trim();
+
 //Creating a button everytime user searches city name
 var historySearch=document.querySelector("#history");
 var searchBtn=document.createElement("button");
@@ -11,24 +12,25 @@ searchBtn.setAttribute("class","btn btn-secondary");
 searchBtn.textContent=cityname;
 historySearch.appendChild(searchBtn);
 
-var savecityname=localStorage.setItem("cityname",cityname);
-console.log(savecityname);
+//Saving city name in local storage
+var cityValue=localStorage.getItem("cities")
+var savedCities=JSON.parse(cityValue);
+if (savedCities === null) {
+    savedCities = [];
+  }
+savedCities.push(cityname);
 
+localStorage.setItem("cities",JSON.stringify(savedCities));
 
-
-
-
-console.log(cityname);
 
 var queryURL= "https://api.openweathermap.org/data/2.5/forecast?q="+ cityname + "&appid=" + APIKey;
 //Date format expected 14/9/2022 "&cnt=15"+
 var currentdate=dayjs().format("DD/M/YYYY");
-var cloud=$("<i>");
-cloud.attr("class","fa-solid fa-cloud");
+
 
 var h1=$("<h1>");
 h1.text(`${cityname} (${currentdate})`);
-var locationHeader=$("#today").append(h1.append(cloud));
+var locationHeader=$("#today").append(h1);
 
 
 fetch(queryURL)
@@ -37,7 +39,12 @@ return response.json();
 
 })
 .then(function(data){
-   console.log(data);
+
+// Displaying correct icon from API
+var iconTag=$("<img>");
+var iconImg= data.list[1].weather[0].icon;
+var iconurl="https://openweathermap.org/img/wn/"+iconImg+".png";
+iconTag.attr("src",iconurl);
 
     //Temp Wind and humidity display
     var div=$("<div>");
@@ -48,7 +55,8 @@ return response.json();
     currentTemp=(currentTemp-273.15).toFixed(2);
     //Tempreture in celcius
     var liTemp=$("<li>");
-    liTemp=liTemp.text(`Temp: ${currentTemp} ℃`);
+    liTemp=liTemp.text(`Temp: ${currentTemp} ℃ `);
+    liTemp.append(iconTag);
     ul.append(liTemp);
     div.append(ul);
        locationHeader.append(div);
@@ -76,25 +84,35 @@ return response.json();
     for(var i=0;i<=5; i++){
         //The api is sending 8 responses per day every 3 hour interval, below is ensuring those readings are skipped every 8 records.
         var weatherData=data.list[i*8];
+
+        if (weatherData && weatherData.main) {
+            
         var futureTemp= weatherData.main.temp;
         futureTemp=(futureTemp-273.15).toFixed(2);
         var futureWind=weatherData.wind.speed;
         futureWind=(futureWind*3.6).toFixed(2);
         var futureHumidity=weatherData.main.humidity;
         var dateTime=weatherData.dt_txt.split(' ');
+
+        //Extracting icons for weather
+        var iconTagData=$("<img>");
+        var iconImgData= weatherData.weather[0].icon;
+        var iconurlData="https://openweathermap.org/img/wn/"+iconImgData+".png";
+        iconTagData.attr("src",iconurlData);
+
         
         //Creating card with weather details for each day
         var cardDiv=$("<div>").addClass("card");
         var dateTimeElement=$("<h5>").text(dateTime[0]);
         var tempElement=$("<p>").text(`Temp: ${futureTemp} ℃`);
+        tempElement.append(iconTagData);
         var windElement=$("<p>").text(`Wind: ${futureWind} KPH`);
         var humidityElement=$("<p>").text(`Humidity: ${futureHumidity} %`);
         cardDiv.append(dateTimeElement,tempElement,humidityElement,windElement);
 
         $("#weather").append(cardDiv);
     } 
-
-
+    }
 
     });
     
@@ -102,7 +120,18 @@ return response.json();
 }); 
 
 
+//Clearing the screen when buttons from search history are clicked
 
+// $(document).on("clicked","#inputtext",displayHistoricalCities);
+
+// function displayHistoricalCities(){
+// $("#weather").empty();
+
+
+
+
+
+// }
 
 
 
