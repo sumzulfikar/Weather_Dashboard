@@ -143,6 +143,24 @@ function createCityButton(cityname){
 
 }
 
+//Function to keep the buttons to appear after relod
+
+
+function persistButtons(){
+
+    var cityValue=localStorage.getItem("cities");
+  //The array for cities it too big so only the latest 4 cities will appear in reload
+
+    var savedCities=JSON.parse(cityValue);
+    var latestCities=savedCities.slice(-4);
+    latestCities.map(createCityButton);
+
+}
+
+window.onload=function(){
+    persistButtons();
+}
+
 //Clearing the screen when buttons from search history are clicked and calling the weather api to return weather details
 
 $(document).on("click","#inputtext",function(event){
