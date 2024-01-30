@@ -1,35 +1,45 @@
-
+/* Style for the header section with color gradient */
 .weather-header{
     background-image: linear-gradient(to right, #3360B8,#210C4F)!important;
     text-align: center;
     font-family:Arial, Helvetica, sans-serif ;
     color: #FFFF;
 }
-
+/* Seach and the city buttons styling to create consistency in the look and feel */
 #search-button{
     background-color: #5098E6;
     color: white;
     width: 150px;
 }
+
 .btn{ 
     margin: 10px;
     padding: 10px;
+    width: 162px;
 
 }
-#search-section{float: left;
-width:33%}
+
+/* The application is divided to ensure sercch and buttons appear in the left area of the
+screen and the weather details at the right while the footer reamains at eh bottom of the 
+screen  */
+
+#search-section{
+    float: left;
+    width:30%
+}
+
 #weather{
     float: right;
-    width:67%;
-
+    width:70%;
 }
+
 footer {
     clear: both;
     margin-top: 400px;
     
 
   }
-
+/* 5 day weather cards styling */
 .card{
     display: inline-block;
     flex-direction: row;
